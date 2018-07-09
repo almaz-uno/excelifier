@@ -1,2 +1,3 @@
-# thistle
-MS Project => Excel export
+# Excelifier
+
+One way migration Microsoft Project => Microsoft Excel
