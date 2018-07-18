@@ -9,13 +9,18 @@ import (
 
 // TaskElement represents task element in XML
 type TaskElement struct {
-	UID           string
-	Name          string
-	WBS           string
-	Active        int
-	OutlineNumber string // it seems to be the same as WBS
-	OutlineLevel  int
-	Duration      string
+	UID               string
+	Name              string
+	WBS               string
+	Active            int
+	OutlineNumber     string // it seems to be the same as WBS
+	OutlineLevel      int
+	Duration          string
+	Work              string
+	ExtendedAttribute []*struct {
+		FieldID string
+		Value   string
+	} `xml:"ExtendedAttribute"`
 }
 
 // DurationTime returns duration of the task
@@ -23,10 +28,25 @@ func (t *TaskElement) DurationTime() (time.Duration, error) {
 	return time.ParseDuration(strings.ToLower(strings.TrimLeft(t.Duration, "PT")))
 }
 
-// Hours returns duration, hours
+// DurationHours returns duration, hours
 // It returns 0.0, if there is an error occurred
-func (t *TaskElement) Hours() float64 {
+func (t *TaskElement) DurationHours() float64 {
 	d, err := t.DurationTime()
+	if err != nil {
+		return 0.0
+	}
+	return d.Hours()
+}
+
+// WorkTime returns work as a Duration
+func (t *TaskElement) WorkTime() (time.Duration, error) {
+	return time.ParseDuration(strings.ToLower(strings.TrimLeft(t.Work, "PT")))
+}
+
+// WorkHours returns work, hours
+// It returns 0.0, if there is an error occurred
+func (t *TaskElement) WorkHours() float64 {
+	d, err := t.WorkTime()
 	if err != nil {
 		return 0.0
 	}

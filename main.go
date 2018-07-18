@@ -74,7 +74,7 @@ func doExport(srcFile, dstFile string) error {
 		style.ApplyAlignment = true
 
 		cell.SetStyle(style)
-		row.AddCell().SetFloat(t.Hours() / 8.0)
+		row.AddCell().SetFloat(t.WorkHours() / 8.0)
 
 	}
 
