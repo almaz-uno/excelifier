@@ -3,9 +3,12 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/tealeg/xlsx"
 )
+
+const timeLayout = "2006-01-02T15:04:05"
 
 func main() {
 	if len(os.Args) < 3 {
@@ -53,10 +56,26 @@ func doExport(srcFile, dstFile string) error {
 	cell = row.AddCell()
 	cell.Value = `Name`
 	cell.SetStyle(style)
-	sheet.Col(1).Width = 50.0
+	//sheet.Col(1).Width = 50.0
 
 	cell = row.AddCell()
 	cell.Value = `Duration, days`
+	cell.SetStyle(style)
+
+	cell = row.AddCell()
+	cell.Value = `Work time, days`
+	cell.SetStyle(style)
+
+	cell = row.AddCell()
+	cell.Value = `Start`
+	cell.SetStyle(style)
+
+	cell = row.AddCell()
+	cell.Value = `Finish`
+	cell.SetStyle(style)
+
+	cell = row.AddCell()
+	cell.Value = `Cost`
 	cell.SetStyle(style)
 
 	for _, t := range tt {
@@ -74,7 +93,20 @@ func doExport(srcFile, dstFile string) error {
 		style.ApplyAlignment = true
 
 		cell.SetStyle(style)
+		row.AddCell().SetFloat(t.DurationHours() / 8.0)
+
+		cell.SetStyle(style)
 		row.AddCell().SetFloat(t.WorkHours() / 8.0)
+
+		if t, err := time.Parse(timeLayout, t.Start); err == nil {
+			row.AddCell().SetDate(t)
+		}
+
+		if t, err := time.Parse(timeLayout, t.Finish); err == nil {
+			row.AddCell().SetDate(t)
+		}
+
+		row.AddCell().SetFloat(t.Cost / 100.0)
 
 	}
 

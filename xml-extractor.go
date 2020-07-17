@@ -12,11 +12,14 @@ type TaskElement struct {
 	UID               string
 	Name              string
 	WBS               string
+	Start             string
+	Finish            string
 	Active            int
 	OutlineNumber     string // it seems to be the same as WBS
 	OutlineLevel      int
 	Duration          string
 	Work              string
+	Cost              float64
 	ExtendedAttribute []*struct {
 		FieldID string
 		Value   string
